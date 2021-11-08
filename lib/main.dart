@@ -63,6 +63,16 @@ class ChatPage extends StatelessWidget {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) {
+              return AddPostPage();
+            }),
+          );
+        },
+      ),
     );
   }
 }
