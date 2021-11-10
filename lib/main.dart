@@ -121,8 +121,9 @@ class ChatPage extends StatelessWidget {
         title: Text("チャット"),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.close),
+            icon: Icon(Icons.logout),
             onPressed: () async {
+              await FirebaseAuth.instance.signOut();
               await Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) {
                   return LoginPage();
