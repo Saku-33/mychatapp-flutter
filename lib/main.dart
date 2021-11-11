@@ -134,9 +134,36 @@ class ChatPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Text("ログイン情報：　${user.email}"),
-      ),
+      body: Column(children: [
+        Container(
+          padding: EdgeInsets.all(8),
+          child: Text("ログイン情報：　${user.email}"),
+        ),
+        Expanded(
+          child: FutureBuilder<QuerySnapshot>(
+            future: FirebaseFirestore.instance
+                .collection('posts')
+                .orderBy('date')
+                .get(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final List<DocumentSnapshot> documents = snapshot.data!.docs;
+                return ListView(
+                  children: documents.map((document) {
+                    return Card(
+                      child: ListTile(
+                        title: Text(document['text']),
+                        subtitle: Text(document['email']),
+                      ),
+                    );
+                  }).toList(),
+                );
+              }
+              return Center(child: Text('読み込み中...'));
+            },
+          ),
+        )
+      ]),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () async {
@@ -190,7 +217,7 @@ class _AddPostPageState extends State<AddPostPage> {
                   final date = DateTime.now().toLocal().toIso8601String();
                   final email = widget.user.email;
                   await FirebaseFirestore.instance
-                      .collection('post')
+                      .collection('posts')
                       .doc()
                       .set({
                     'text': messageText,
