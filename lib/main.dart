@@ -1,22 +1,37 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'dart:js';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class UserState extends ChangeNotifier {
+  User? user;
+
+  void setUser(User newUser) {
+    user = newUser;
+    notifyListeners();
+  }
+}
 
 void main() {
   runApp(ChatApp());
 }
 
 class ChatApp extends StatelessWidget {
+  final UserState userState = UserState();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ChatApp',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: LoginPage(),
-    );
+    return ChangeNotifierProvider<UserState>(
+        create: (context) => UserState(),
+        child: MaterialApp(
+          title: 'ChatApp',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: LoginPage(),
+        ));
   }
 }
 
@@ -32,11 +47,14 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final UserState userState = Provider.of<UserState>(context);
+
     return Scaffold(
       body: Center(
         child: Container(
-            padding: EdgeInsets.all(32),
+            padding: EdgeInsets.all(24),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 TextFormField(
                   decoration: InputDecoration(labelText: "メールアドレス"),
@@ -58,30 +76,31 @@ class _LoginPageState extends State<LoginPage> {
                 Container(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () async {
-                      try {
-                        final FirebaseAuth auth = FirebaseAuth.instance;
-                        final UserCredential result =
-                            await auth.createUserWithEmailAndPassword(
-                                email: email, password: password);
-
-                        final User user = result.user!;
-                        setState(() {
-                          infoText = "登録OK:${user.email}";
-                        });
-                      } catch (e) {
-                        setState(() {
-                          infoText = "登録NG:${e.toString()}";
-                        });
-                      }
-                    },
-                    child: Text("ユーザー登録"),
-                  ),
+                      child: Text("ユーザー登録"),
+                      onPressed: () async {
+                        try {
+                          final FirebaseAuth auth = FirebaseAuth.instance;
+                          final result =
+                              await auth.createUserWithEmailAndPassword(
+                                  email: email, password: password);
+                          userState.setUser(result.user!);
+                          await Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) {
+                              return ChatPage();
+                            }),
+                          );
+                        } catch (e) {
+                          setState(() {
+                            infoText = "登録NG:${e.toString()}";
+                          });
+                        }
+                      }),
                 ),
                 const SizedBox(height: 8),
                 Container(
                   width: double.infinity,
                   child: OutlinedButton(
+                    child: Text("ログイン"),
                     onPressed: () async {
                       try {
                         final FirebaseAuth auth = FirebaseAuth.instance;
@@ -89,9 +108,10 @@ class _LoginPageState extends State<LoginPage> {
                           email: email,
                           password: password,
                         );
+                        userState.setUser(result.user!);
                         await Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) {
-                            return ChatPage(result.user!);
+                            return ChatPage();
                           }),
                         );
                       } catch (e) {
@@ -100,7 +120,6 @@ class _LoginPageState extends State<LoginPage> {
                         });
                       }
                     },
-                    child: Text("ログイン"),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -113,10 +132,13 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 class ChatPage extends StatelessWidget {
-  ChatPage(this.user);
-  final User user;
+  ChatPage();
+
   @override
   Widget build(BuildContext context) {
+    final UserState userState = Provider.of<UserState>(context);
+    final User user = userState.user!;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("チャット"),
@@ -179,7 +201,7 @@ class ChatPage extends StatelessWidget {
         onPressed: () async {
           await Navigator.of(context).push(
             MaterialPageRoute(builder: (context) {
-              return AddPostPage(user);
+              return AddPostPage();
             }),
           );
         },
@@ -189,8 +211,7 @@ class ChatPage extends StatelessWidget {
 }
 
 class AddPostPage extends StatefulWidget {
-  AddPostPage(this.user);
-  final User user;
+  AddPostPage();
 
   @override
   _AddPostPageState createState() => _AddPostPageState();
@@ -201,6 +222,9 @@ class _AddPostPageState extends State<AddPostPage> {
 
   @override
   Widget build(BuildContext context) {
+    final UserState userState = Provider.of<UserState>(context);
+    final User user = userState.user!;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("チャット投稿"),
@@ -225,7 +249,7 @@ class _AddPostPageState extends State<AddPostPage> {
                 child: Text('投稿'),
                 onPressed: () async {
                   final date = DateTime.now().toLocal().toIso8601String();
-                  final email = widget.user.email;
+                  final email = user.email;
                   await FirebaseFirestore.instance
                       .collection('posts')
                       .doc()
