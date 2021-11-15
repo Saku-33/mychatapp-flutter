@@ -110,6 +110,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "flutter_riverpod",
+      "rootUri": "file:///Users/misa/development/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_riverpod-0.14.0+3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_test",
       "rootUri": "file:///Users/misa/development/flutter/packages/flutter_test",
       "packageUri": "lib/",
@@ -118,6 +124,12 @@
     {
       "name": "flutter_web_plugins",
       "rootUri": "file:///Users/misa/development/flutter/packages/flutter_web_plugins",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "freezed_annotation",
+      "rootUri": "file:///Users/misa/development/flutter/.pub-cache/hosted/pub.dartlang.org/freezed_annotation-0.14.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -136,6 +148,12 @@
     {
       "name": "js",
       "rootUri": "file:///Users/misa/development/flutter/.pub-cache/hosted/pub.dartlang.org/js-0.6.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "json_annotation",
+      "rootUri": "file:///Users/misa/development/flutter/.pub-cache/hosted/pub.dartlang.org/json_annotation-4.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -176,6 +194,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "riverpod",
+      "rootUri": "file:///Users/misa/development/flutter/.pub-cache/hosted/pub.dartlang.org/riverpod-0.14.0+3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///Users/misa/development/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -190,6 +214,12 @@
     {
       "name": "stack_trace",
       "rootUri": "file:///Users/misa/development/flutter/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.10.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "state_notifier",
+      "rootUri": "file:///Users/misa/development/flutter/.pub-cache/hosted/pub.dartlang.org/state_notifier-0.7.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -236,7 +266,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2021-11-14T03:09:21.004281Z",
+  "generated": "2021-11-14T23:25:44.513473Z",
   "generator": "pub",
   "generatorVersion": "2.13.4"
 }
